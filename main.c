@@ -6,7 +6,7 @@
 int	main(void)
 {
 	char	str[256];
-	int	read_char;
+	int		read_char;
 	int		fd;
 
 	fd = open("text.txt", O_RDONLY);
