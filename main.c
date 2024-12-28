@@ -77,10 +77,8 @@ static char	*ft_save_rest(char *buffer)
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
-	int			bytes_read;
 	char		*str;
-
-	bytes_read = 0;
+	str = NULL;
 	if (!BUFFER_SIZE || read(fd, 0, 0) < 0)
 		return (NULL);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
@@ -99,16 +97,11 @@ int	main(void)
 
 	char str[256] = {0}; // Initialize to zero
 	fd = open("text.txt", O_RDONLY);
-	if (fd < 0)
-	{
-		printf("Error opening file\n");
-		return (1);
-	}
 	res = ft_get_line(str, fd);
-	if (res)
-		printf("Read content: '%s'\n", res);
-	else
-		printf("Nothing read or error occurred\n");
+	printf("Read content: '%s'\n", res);
+	printf("Read content: '%s'\n", res);
+	printf("Read content: '%s'\n", res);
+	printf("Read content: '%s'\n", res);
 	close(fd);
 	return (0);
 }
