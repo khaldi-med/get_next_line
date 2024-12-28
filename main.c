@@ -76,32 +76,40 @@ static char	*ft_save_rest(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
-	char		*str;
-	str = NULL;
-	if (!BUFFER_SIZE || read(fd, 0, 0) < 0)
+	char		*buffer;
+	static char	*hold;
+	char		*line;
+
+	line = NULL;
+	if (fd < 0 || !BUFFER_SIZE || read(fd, 0, 0) < 0)
 		return (NULL);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	buffer = ft_get_line(buffer, fd);
-	str = ft_check_newline(str);
-	buffer = ft_save_rest(buffer);
-	return (str);
+	hold = ft_get_line(buffer, fd);
+	if (!hold)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	line = ft_check_newline(hold);
+	if (!line)
+		return (NULL);
+	hold = ft_save_rest(hold);
+	return (line);
 }
 
 int	main(void)
 {
-	char	*res;
+	char	*line;
 	int		fd;
 
-	char str[256] = {0}; // Initialize to zero
 	fd = open("text.txt", O_RDONLY);
-	res = ft_get_line(str, fd);
-	printf("Read content: '%s'\n", res);
-	printf("Read content: '%s'\n", res);
-	printf("Read content: '%s'\n", res);
-	printf("Read content: '%s'\n", res);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("Read content: '%s'\n", line);
+		free(line);
+	}
 	close(fd);
 	return (0);
 }
