@@ -1,202 +1,119 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
-char	*ft_get_line(char *buffer, int fd)
+// Helper function to join two strings and free the first one
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	int	bytes_read;
+	char	*result;
+	int		i;
+	int		j;
 
+	if (!s2)
+		return (s1);
+	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!result)
+		return (NULL);
+	i = -1;
+	while (s1 && s1[++i])
+		result[i] = s1[i];
+	if (!s1)
+		i = 0;
+	j = -1;
+	while (s2[++j])
+		result[i + j] = s2[j];
+	result[i + j] = '\0';
+	free(s1);
+	return (result);
+}
+
+char	*ft_read_file(int fd, char *stored)
+{
+	char	*buffer;
+	int		bytes_read;
+
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (bytes_read <= 0)
-		return (NULL);
-	buffer[bytes_read] = '\0';
-	return (buffer);
+	bytes_read = 1;
+	while (bytes_read > 0 && !ft_strchr(stored, '\n'))
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[bytes_read] = '\0';
+		stored = ft_strjoin_free(stored, buffer);
+	}
+	free(buffer);
+	return (stored);
 }
-//
-// char	*ft_check_newline(char *buffer)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*line;
-//
-// 	i = 0;
-// 	j = 0;
-// 	while (buffer[i] && buffer[i] != '\n')
-// 		i++;
-// 	if(buffer[i] == '\n')
-// 		i++;
-// 	line = malloc(sizeof(char) * (i + 1));
-// 	if (!line)
-// 		return (NULL);
-// 	while (j <= i)
-// 		line[j++] = buffer[i++];
-// 	line[j + 1] = '\0';
-// 	return (line);
-// }
-//
-// char	*ft_save_rest(const char *buffer)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*rest;
-//
-// 	i = 0;
-// 	j = 0;
-// 	while (buffer[i] && buffer[i] != '\n')
-// 		i++;
-// 	if (!buffer[i])
-// 		return (NULL);
-// 	rest = malloc(sizeof(char) * (BUFFER_SIZE - i));
-// 	if (!rest)
-// 		return (NULL);
-// 	i++;
-// 	while (buffer[i])
-// 		rest[j++] = buffer[i++];
-// 	rest[j + 1] = '\0';
-// 	return (rest);
-// }
-//
-// char	*get_next_line(int fd)
-// {
-// 	static char	*stored;
-// 	char		*buffer;
-// 	char		*line;
-// 	char		*temp;
-//
-// 	if (fd < 0 || BUFFER_SIZE <= 0)
-// 		return (NULL);
-// 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-// 	if (!buffer)
-// 		return (NULL);
-// 	if (!stored)
-// 		stored = ft_get_line(buffer, fd);
-// 	line = ft_check_newline(stored);
-// 	temp = ft_save_rest(stored);
-// 	stored = temp;
-// 	free(buffer);
-// 	return (line);
-// }
-//
-// int	main(void)
-// {
-// 	char	*line;
-// 	int		fd;
-//
-// 	fd = open("text.txt", O_RDONLY);
-// 	if (fd < 0)
-// 	{
-// 		perror("Error opening file");
-// 		return (1);
-// 	}
-// 	while ((line = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("Line read: '%s'\n", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return (0);
-// }
 
-char	*ft_check_newline(char *buffer)
+char	*ft_get_line(char *stored)
 {
-	int		i;
 	char	*line;
+	int		i;
 
+	if (!stored || !stored[0])
+		return (NULL);
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (stored[i] && stored[i] != '\n')
 		i++;
-	if (buffer[i] == '\n')
+	if (stored[i] == '\n')
 		i++;
 	line = malloc(sizeof(char) * (i + 1));
 	if (!line)
 		return (NULL);
 	i = -1;
-	while (buffer[++i] && buffer[i] != '\n')
-		line[i] = buffer[i];
-	if (buffer[i] == '\n')
+	while (stored[++i] && stored[i] != '\n')
+		line[i] = stored[i];
+	if (stored[i] == '\n')
 		line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
 }
 
-char	*ft_save_rest(char *buffer)
+char	*ft_save_rest(char *stored)
 {
+	char	*rest;
 	int		i;
 	int		j;
-	char	*rest;
 
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (stored[i] && stored[i] != '\n')
 		i++;
-	if (!buffer[i])
+	if (!stored[i])
+	{
+		free(stored);
 		return (NULL);
-	if (buffer[i] == '\n')
-		i++;
-	rest = malloc(sizeof(char) * (ft_strlen(&buffer[i]) + 1));
+	}
+	rest = malloc(sizeof(char) * (ft_strlen(&stored[i + 1]) + 1));
 	if (!rest)
 		return (NULL);
+	i++;
 	j = 0;
-	while (buffer[i])
-		rest[j++] = buffer[i++];
+	while (stored[i])
+		rest[j++] = stored[i++];
 	rest[j] = '\0';
+	free(stored);
 	return (rest);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*stored;
-	char		*buffer;
 	char		*line;
 
-	stored = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	stored = ft_read_file(fd, stored);
 	if (!stored)
-	{
-		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		if (!buffer)
-			return (NULL);
-		stored = ft_get_line(buffer, fd);
-		if (!stored)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		free(buffer); // Free buffer after copying to stored
-	}
-	line = ft_check_newline(stored);
-	if (!line)
-	{
-		free(stored); // Free stored if we can't get a line
-		stored = NULL;
 		return (NULL);
-	}
-	buffer = ft_save_rest(stored);
-	free(stored);    // Free old stored content
-	stored = buffer; // Update stored with new content
+	line = ft_get_line(stored);
+	stored = ft_save_rest(stored);
 	return (line);
-}
-
-int	main(void)
-
-{
-	char *line;
-	int fd;
-
-	fd = open("text.txt", O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Error opening file");
-		return (1);
-	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("Line read: '%s'\n", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
 }
