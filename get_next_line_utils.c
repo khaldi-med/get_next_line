@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 06:38:40 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/28 11:55:43 by mohkhald         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:06:46 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,5 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	new[i] = '\0';
 	return (new);
 }
+
 
