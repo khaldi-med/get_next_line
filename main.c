@@ -10,9 +10,19 @@ int	main(void)
 	char	*line;
 
 	fd = open("text.txt", O_RDONLY);
-	while ((line = get_next_line(fd)))
+	if (fd < 0)
 	{
-		printf("%s", line);
+		printf("Error opening file\n");
+		return (1);
 	}
+	line = get_next_line(fd);
+	if (line)
+	{
+		printf("Line read: %s", line);
+		free(line);
+	}
+	else
+		printf("No line read or error occurred\n");
+	close(fd);
 	return (0);
 }
