@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*result;
 	int		total_len;
@@ -44,7 +44,7 @@ char	*ft_read_to_stash(int fd, char *stash)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		stash = ft_strjoin_free(stash, buffer);
+		stash = ft_strjoin(stash, buffer);
 	}
 	free(buffer);
 	return (stash);
