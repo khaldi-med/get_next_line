@@ -1,8 +1,4 @@
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 char	*ft_read_file(int fd, char *stored)
 {
@@ -12,26 +8,33 @@ char	*ft_read_file(int fd, char *stored)
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
+	{
+		free(stored);
 		return (NULL);
-	bytes_read = 1;
-	while (bytes_read > 0 && (!stored || !ft_strchr(stored, '\n')))
+	}
+	while (1)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-			return (free(buffer), free(stored), NULL);
-		buffer[bytes_read] = '\0';
-		if (!stored)
-			stored = ft_strdup(buffer);
-		else
+		if (bytes_read <= 0)
 		{
-			temp = ft_strjoin(stored, buffer);
-			free(stored);
-			stored = temp;
+			free(buffer);
+			return (stored);
 		}
-		if (!stored)
-			return (free(buffer), NULL);
+		buffer[bytes_read] = '\0';
+		temp = ft_strjoin(stored, buffer);
+		free(stored);
+		if (!temp)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		stored = temp;
+		if (ft_strchr(stored, '\n'))
+		{
+			free(buffer);
+			return (stored);
+		}
 	}
-	return (free(buffer), stored);
 }
 
 char	*ft_get_line(char *stored)
@@ -39,14 +42,12 @@ char	*ft_get_line(char *stored)
 	char	*line;
 	int		i;
 
+	i = 0;
 	if (!stored || !stored[0])
 		return (NULL);
-	i = 0;
 	while (stored[i] && stored[i] != '\n')
 		i++;
-	if (stored[i] == '\n')
-		i++;
-	line = malloc(sizeof(char) * (i + 1));
+	line = malloc(sizeof(char) * (i + 2)); // +2 for '\n' and '\0'
 	if (!line)
 		return (NULL);
 	i = 0;
@@ -64,24 +65,16 @@ char	*ft_get_line(char *stored)
 char	*ft_save_rest(char *stored)
 {
 	char	*rest;
-	int		i;
-	int		j;
+	char	*newline_ptr;
 
+	rest = NULL;
 	if (!stored)
 		return (NULL);
-	i = 0;
-	while (stored[i] && stored[i] != '\n')
-		i++;
-	if (!stored[i])
-		return (free(stored), NULL);
-	i++;
-	rest = malloc(sizeof(char) * (ft_strlen(&stored[i]) + 1));
-	if (!rest)
-		return (free(stored), NULL);
-	j = 0;
-	while (stored[i])
-		rest[j++] = stored[i++];
-	rest[j] = '\0';
+	newline_ptr = ft_strchr(stored, '\n');
+	if (newline_ptr)
+	{
+		rest = ft_strdup(newline_ptr + 1);
+	}
 	free(stored);
 	return (rest);
 }
@@ -91,7 +84,8 @@ char	*get_next_line(int fd)
 	static char	*stored;
 	char		*line;
 
-	if (!stored || fd < 0 || BUFFER_SIZE <= 0)
+	stored = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stored = ft_read_file(fd, stored);
 	if (!stored)

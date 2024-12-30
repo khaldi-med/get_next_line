@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 06:38:40 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/30 00:20:07 by mohkhald         ###   ########.fr       */
+/*   Updated: 2024/12/30 01:47:06 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,27 +57,41 @@ char	*ft_strchr(const char *str, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
+	char	*new_str;
 	size_t	len_s1;
 	size_t	len_s2;
-	char	*new;
-	char	*n_p;
+	size_t	i;
+	size_t	j;
 
-	if (!s1 || !s2)
-		return (NULL);
+	if (!s2) // Handle case where s2 is NULL
+		return (ft_strdup(s1));
+	if (!s1)
+		return (ft_strdup(s2));
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
-	new = malloc(len_s1 + len_s2 + 1);
-	if (!new)
+	new_str = malloc(len_s1 + len_s2 + 1);
+	if (!new_str)
+	{
+		free(s1);
 		return (NULL);
-	n_p = new;
-	while (*s1)
-		*new ++ = *s1++;
-	while (*s2)
-		*new ++ = *s2++;
-	*new = '\0';
-	return (n_p);
+	}
+	i = 0;
+	while (i < len_s1)
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (j < len_s2)
+	{
+		new_str[i + j] = s2[j];
+		j++;
+	}
+	new_str[len_s1 + len_s2] = '\0';
+	free(s1);
+	return (new_str);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
