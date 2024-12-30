@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 06:38:40 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/29 16:06:46 by mohkhald         ###   ########.fr       */
+/*   Updated: 2024/12/30 00:20:07 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,24 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (new);
 }
 
+char	*ft_strdup_until(const char *s, const char *end)
+{
+	size_t	len;
+	char	*dest;
+	size_t	i;
 
+	if (!s || !end || end < s)
+		return (NULL);
+	len = end - s;
+	dest = malloc(len + 1);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dest[i] = s[i];
+		i++;
+	}
+	dest[len] = '\0';
+	return (dest);
+}

@@ -4,31 +4,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// Helper function to join two strings and free the first one
-char	*ft_strjoin_free(char *s1, char *s2)
-{
-	char	*result;
-	int		i;
-	int		j;
-
-	if (!s2)
-		return (s1);
-	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!result)
-		return (NULL);
-	i = -1;
-	while (s1 && s1[++i])
-		result[i] = s1[i];
-	if (!s1)
-		i = 0;
-	j = -1;
-	while (s2[++j])
-		result[i + j] = s2[j];
-	result[i + j] = '\0';
-	free(s1);
-	return (result);
-}
-
 char	*ft_read_file(int fd, char *stored)
 {
 	char	*buffer;
@@ -47,7 +22,7 @@ char	*ft_read_file(int fd, char *stored)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		stored = ft_strjoin_free(stored, buffer);
+		stored = ft_strjoin(stored, buffer);
 	}
 	free(buffer);
 	return (stored);
