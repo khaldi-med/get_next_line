@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 02:18:27 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/30 01:44:16 by mohkhald         ###   ########.fr       */
+/*   Updated: 2024/12/30 20:40:06 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@
 #include <unistd.h>
 char	*get_next_line(int fd);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-// char	*ft_strjoin(char const *s1, char const *s2);
 char *ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *str, int c);
-// char *ft_strdup_until(const char *str, const char *end);
 size_t	ft_strlen(const char *str);
 #endif
