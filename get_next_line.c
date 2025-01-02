@@ -85,6 +85,7 @@ char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = ft_read_to_stash(fd, stash);
@@ -94,4 +95,3 @@ char	*get_next_line(int fd)
 	stash = ft_update_stash(stash);
 	return (line);
 }
-
