@@ -19,6 +19,7 @@ int	main(void)
 	if (line)
 	{
 		printf("Line read: %s", line);
+		printf("Line read: %s", line);
 		free(line);
 	}
 	else
