@@ -15,15 +15,16 @@ int	main(void)
 		printf("Error opening file\n");
 		return (1);
 	}
-	line = get_next_line(fd);
-	if (line)
+	while ((line = get_next_line(fd)))
 	{
-		printf("Line read: %s", line);
-		printf("Line read: %s", line);
-		free(line);
+		if (line)
+		{
+			printf("Line read: %s", line);
+			free(line);
+		}
+		else
+			printf("No line read or error occurred\n");
 	}
-	else
-		printf("No line read or error occurred\n");
 	close(fd);
 	return (0);
 }
