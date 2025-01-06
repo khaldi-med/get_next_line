@@ -1,5 +1,11 @@
 #include "get_next_line.h"
 
+char *ft_free_null(char *ptr){
+	free(ptr);
+	ptr = NULL;
+	return NULL;
+}
+
 char	*ft_read_to_stash(int fd, char *stash)
 {
 	char	*buffer;
@@ -9,27 +15,24 @@ char	*ft_read_to_stash(int fd, char *stash)
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (bytes_read > 0)
+	while (bytes_read > 0 && !ft_strchr(stash, '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
 			free(buffer);
-			if (stash)
-				free(stash);
-			return (NULL);
+// 			if (stash)
+// 				free(stash);
+			return (ft_free_null(stash));
 		}
 		if (bytes_read == 0)
 			break ;
 		buffer[bytes_read] = '\0';
 		stash = ft_strjoin(stash, buffer);
 		if (!stash)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		if (ft_strchr(stash, '\n'))
-			break ;
+			return (ft_free_null(buffer));
+// 		if (ft_strchr(stash, '\n'))
+// 			break ;
 	}
 	free(buffer);
 	return (stash);
