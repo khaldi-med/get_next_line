@@ -1,9 +1,10 @@
 #include "get_next_line.h"
 
-char *ft_free_null(char *ptr){
+char	*ft_free_null(char *ptr)
+{
 	free(ptr);
 	ptr = NULL;
-	return NULL;
+	return (NULL);
 }
 
 char	*ft_read_to_stash(int fd, char *stash)
@@ -21,8 +22,6 @@ char	*ft_read_to_stash(int fd, char *stash)
 		if (bytes_read == -1)
 		{
 			free(buffer);
-// 			if (stash)
-// 				free(stash);
 			return (ft_free_null(stash));
 		}
 		if (bytes_read == 0)
@@ -31,8 +30,6 @@ char	*ft_read_to_stash(int fd, char *stash)
 		stash = ft_strjoin(stash, buffer);
 		if (!stash)
 			return (ft_free_null(buffer));
-// 		if (ft_strchr(stash, '\n'))
-// 			break ;
 	}
 	free(buffer);
 	return (stash);
@@ -75,17 +72,11 @@ char	*ft_update_stash(char *stash)
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (!stash[i])
-	{
-		free(stash);
-		return (NULL);
-	}
+		return (ft_free_null(stash));
 	i++;
 	new_stash = malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
 	if (!new_stash)
-	{
-		free(stash);
-		return (NULL);
-	}
+		return (ft_free_null(stash));
 	j = 0;
 	while (stash[i])
 		new_stash[j++] = stash[i++];
