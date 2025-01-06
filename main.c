@@ -7,7 +7,7 @@
 int	main(void)
 {
 	int		fd;
-	char	*line;
+// 	char	*line;
 
 	fd = open("text.txt", O_RDONLY);
 	if (fd < 0)
@@ -15,16 +15,8 @@ int	main(void)
 		printf("Error opening file\n");
 		return (1);
 	}
-	while ((line = get_next_line(fd)))
-	{
-		if (line)
-		{
-			printf("Line read: %s", line);
-			free(line);
-		}
-		else
-			printf("No line read or error occurred\n");
-	}
+	printf("Line read: %s", get_next_line(fd));
+	printf("Line read: %s", get_next_line(fd));
 	close(fd);
 	return (0);
 }
