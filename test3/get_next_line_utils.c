@@ -33,9 +33,15 @@ char	*ft_strdup(const char *s)
 }
 
 char	*ft_strchr(const char *str, int c)
+
 {
+<<<<<<< HEAD:test3/get_next_line_utils.c
 	if(!str)
 		return NULL;
+=======
+	if (str == NULL || *str == '\0')
+		return (NULL);
+>>>>>>> 802301efb825d07a4d7e3348fd28864ce55c77b9:get_next_line_utils.c
 	while (*str)
 	{
 		if (*str == (char)c)
@@ -54,8 +60,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		i;
 	int		j;
 
-	if (!s2 || !s1)
+	if (!s2 && !s1)
 		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
 	total_len = (ft_strlen(s1) + ft_strlen(s2));
 	result = malloc(sizeof(char) * (total_len + 1));
 	if (!result)
@@ -95,7 +105,11 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 // 	size_t	s_len;
 // 	size_t	i;
 // 	char	*new;
+<<<<<<< HEAD:test3/get_next_line_utils.c
 // 
+=======
+//
+>>>>>>> 802301efb825d07a4d7e3348fd28864ce55c77b9:get_next_line_utils.c
 // 	if (!s)
 // 		return (NULL);
 // 	s_len = ft_strlen(s);
